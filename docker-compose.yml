@@ -1,0 +1,24 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:9.5.15-alpine
+    environment:
+      POSTGRES_USER: lemur
+      POSTGRES_PASSWORD: lemur
+      POSTGRES_DB: lemur
+  cfssl:
+    image: deciphernow/cfssl:b94e044
+    ports:
+      - "8888:8888"
+  lemur-frontend:
+    image: deciphernow/lemur-frontend:4842bb0
+    environment:
+      LEMUR_BACKEND_HOST: lemur-backend
+    ports:
+      - "8443:8443"
+  lemur-backend:
+    image: deciphernow/lemur-backend:4842bb0
+    environment:
+      LEMUR_LOG_LEVEL: DEBUG
+      LEMUR_CFSSL_URL: http://cfssl:8888
+      LEMUR_POSTGRES_HOST: postgres
